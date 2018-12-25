@@ -27,7 +27,7 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
 
 @EnableAsync 
 @SpringBootApplication
-//@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
+ //@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
 public class App extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
