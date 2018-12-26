@@ -26,7 +26,8 @@ public class StatusUpdateController {
 	@RequestMapping(value="/editstatus", method=RequestMethod.GET)
 	ModelAndView editStatus(ModelAndView modelAndView, @RequestParam(name="id") Long id) {
 		
-		Optional<StatusUpdate> statusUpdate = statusUpdateService.get(id);
+		Optional<StatusUpdate> statusUpdateOptional = statusUpdateService.get(id);
+		StatusUpdate statusUpdate = statusUpdateOptional.get();
 		
 		modelAndView.getModel().put("statusUpdate", statusUpdate);
 		

@@ -1,6 +1,7 @@
 package com.caveofprogramming.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -85,6 +86,10 @@ public class SiteUserService implements UserDetailsService {
 
 	public SiteUser get(String email) {
 		return siteUserDao.findByEmail(email);
+	}
+
+	public Optional<SiteUser> get(Long id) {
+		return siteUserDao.findById(id);   //.findOne(id);
 	}
 }
 

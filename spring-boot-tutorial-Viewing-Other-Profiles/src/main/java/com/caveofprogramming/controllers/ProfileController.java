@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,16 +77,18 @@ public class ProfileController {
 		
 		return siteUserService.get(email);
 	}
-
-	@RequestMapping(value="/profile")
-	public ModelAndView showProfile(ModelAndView modelAndView) {
-		 
-		SiteUser user = getUser();
+	
+private ModelAndView showProfile(SiteUser user) {
 		
+		ModelAndView modelAndView = new ModelAndView();
+		 
+		if(user == null) {
+			modelAndView.setViewName("redirect:/");
+			return modelAndView;
+		}
+ 
 		Profile profile = profileService.getUserProfile(user);
 		
-		modelAndView.getModel().put("profile", profile);
- 
  		if(profile == null) {
  			profile = new Profile();
  			profile.setUser(user);
@@ -93,6 +97,8 @@ public class ProfileController {
  		
  		Profile webProfile = new Profile();
  		webProfile.safeCopyFrom(profile);
+ 		 
+ 		
  		
  		modelAndView.getModel().put("profile", webProfile);
 		modelAndView.setViewName("app.profile");
@@ -100,6 +106,32 @@ public class ProfileController {
 		return modelAndView;
 	}
 
+	@RequestMapping(value="/profile")
+	public ModelAndView showProfile() {
+		 
+		SiteUser user = getUser();
+		
+		ModelAndView modelAndView = showProfile(user);
+		 
+		return modelAndView;
+	}
+
+	@RequestMapping(value="/profile/{id}")
+	public ModelAndView showProfile(@PathVariable("id") Long id) {
+		 
+//		System.out.println("");
+//		System.out.println("===============================");
+//		System.out.println("id= " + id);
+//		System.out.println("===============================");
+//		System.out.println("");
+		
+		Optional<SiteUser> userOptional = siteUserService.get(id);
+		SiteUser user = userOptional.get();
+		
+		ModelAndView modelAndView = showProfile(user);
+		
+		return modelAndView;
+	}
 	
 
 	@RequestMapping(value="/edit-profile-about", method=RequestMethod.GET)
@@ -176,11 +208,13 @@ public class ProfileController {
 	}
 	
 	
-	@RequestMapping(value = "/profilephoto", method = RequestMethod.GET)
+	@RequestMapping(value = "/profilephoto/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	ResponseEntity<InputStreamResource> servePhoto() throws IOException {
+	ResponseEntity<InputStreamResource> servePhoto(@PathVariable Long id) throws IOException {
 		
-		SiteUser user = getUser();
+		Optional<SiteUser> userOptional = siteUserService.get(id);
+		SiteUser user = userOptional.get();
+		
 		Profile profile = profileService.getUserProfile(user);
 
 		Path photoPath = Paths.get(photoUploadDirectory, "default", "avatar.jpg");
