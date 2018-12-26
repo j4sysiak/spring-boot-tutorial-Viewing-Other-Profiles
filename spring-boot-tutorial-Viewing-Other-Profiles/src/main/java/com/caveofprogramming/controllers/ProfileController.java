@@ -99,7 +99,7 @@ private ModelAndView showProfile(SiteUser user) {
  		webProfile.safeCopyFrom(profile);
  		 
  		
- 		
+ 		modelAndView.getModel().put("userId", user.getId());
  		modelAndView.getModel().put("profile", webProfile);
 		modelAndView.setViewName("app.profile");
 		

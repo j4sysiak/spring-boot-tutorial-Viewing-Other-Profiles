@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
-<c:url var="profilePhoto" value="/profilephoto" />
+<c:url var="profilePhoto" value="/profilephoto/${userId}" />
 <c:url var="editProfileAbout" value="/edit-profile-about" />
 
 <div class="row">
